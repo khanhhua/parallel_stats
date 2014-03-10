@@ -1,0 +1,19 @@
+{
+  "name": "parallel_stats",
+  "version": "0.1.0",
+  "description": "Parallel word counter",
+  "main": "main.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "keywords": [
+    "nodejs",
+    "parallel"
+  ],
+  "author": "Khanh Hua",
+  "license": "MIT",
+  "dependencies": {
+    "nimble": "0.0.2",
+    "async": "^0.2.10"
+  }
+}
