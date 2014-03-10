@@ -31,19 +31,31 @@ exports.count = function(callback) {
 			// ### SYNC
 			if (exports.mode === 'SYNC'){
 				var stats = fs.statSync(item);
-				if (stats.isFile)
-					total += stats.size;
-				// Must call done() to signal when a process is complete
-				console.log('==>', item, stats.size);
-				done();				
+				if (stats.isFile) {
+					fs.readFile(item, function (err, data) {
+						if (err) throw err;				  					  
+					  var word_count = internal_count(data);
+					  total += word_count;
+						// Must call done() to signal when a process is complete
+					  done();
+					});
+				} else
+					done();
 			} else if (exports.mode === 'ASYNC'){
 				// ### ASYNC
 				fs.stat(item, function(error, stats){
 					if (stats.isFile)
-						total += stats.size;
+						fs.readFile(item, function (err, data) {
+						  if (err) throw err;
+						  var word_count = internal_count(data);
+						  total += word_count;
+							// Must call done() to signal when a process is complete
+							console.log('==>', item, stats.size);
+						  done();
+						});
+					else
+						done();
 					// Must call done() to signal when a process is complete
-					console.log('==>', item, stats.size);
-					done();				
 				});
 			}
 		}, 
@@ -57,3 +69,11 @@ exports.count = function(callback) {
 				callback(null,total);
 		});
 };
+
+function internal_count(data) {
+	data = data.toString();
+
+	var regex = /\b[^\s]+?\b/gi; // non-space
+	var matches = data.match(regex);
+	return matches.length;
+}
